@@ -14,7 +14,7 @@ function updateRecord(status, preserveRisk=false){
  if(!preserveRisk)current.data=d;current.status=status;current.offers=available;current.selected=[...chosen];persist();
 }
 function fill(d){for(const [k,v] of Object.entries(d)){const input=form.elements.namedItem(k);if(input&&k!=='company')input.value=v;}}
-function example(){fill({marca:'Toyota',modelo:'Corolla',version:'XEI CVT',anio:'2022',localidad:'Martínez, Buenos Aires',uso:'Particular',fecha:new Date().toLocaleDateString('en-CA'),productor:'Equipo Gaman · Demo',cliente:'Prospecto de ejemplo'});}
+function example(){fill({marca:'Toyota',modelo:'Corolla',version:'XEI CVT',anio:'2022',localidad:'1640',uso:'Particular',fecha:new Date().toLocaleDateString('en-CA'),productor:'Equipo Gaman · Demo',cliente:'Prospecto de ejemplo'});}
 $('#fill-example').addEventListener('click',()=>{example();$('#plate').value='AB123CD';$('#plate-status').textContent='Ejemplo cargado. Los datos no pertenecen a un vehículo real.';});
 $('#find-plate').addEventListener('click',()=>{
  const plate=$('#plate').value.toUpperCase().replace(/[\s-]/g,'');$('#plate').value=plate;
