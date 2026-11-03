@@ -1,5 +1,7 @@
 # Demo conceptual del multicotizador Gaman
 
+Alcance actualizado: propuesta de plataforma para 4.000 productores, cuentas individuales, permisos, cartera central y cotizador. Ver `plataforma.html`. Estos componentes centrales son objetivos de implementación: esta demo estática no autentica usuarios, no comparte datos entre dispositivos ni acredita capacidad para 4.000 cuentas. El plan técnico rector vive en el repositorio privado `gaman-multicotizador/docs/proyecto-plataforma.md`.
+
 Sitio: https://patriagrande-tech.github.io/gaman-multicotizador-demo/
 
 Recorrido: cargar ejemplo completo o consultar una patente ficticia (AB123CD / ABC123), completar el riesgo, elegir compañías y escenario, simular resultados, seleccionar hasta tres ofertas, comparar y preparar una propuesta imprimible/PDF. El historial permite retomar borradores y cambiar estados de seguimiento. Los datos se guardan solo en localStorage de cada navegador y pueden borrarse desde la pantalla.
