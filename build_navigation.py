@@ -37,6 +37,8 @@ def build():
         text = text.replace('</head>', '<link rel="stylesheet" href="navigation.css?v=9"></head>', 1)
         text = re.sub(r'<script src="navigation.js[^" ]*" defer></script>', '', text)
         text = text.replace('</head>', '<script src="navigation.js?v=9" defer></script></head>', 1)
+        text = re.sub(r'<link rel="stylesheet" href="layout.css[^" ]*">', '', text)
+        text = text.replace('</head>', '<link rel="stylesheet" href="layout.css?v=10"></head>', 1)
         # Misma versión de los estilos compartidos en todas las pantallas.
         text = re.sub(r'(href="(?:styles|features)\.css)\?v=[^" ]+', r'\1?v=8', text)
         text = re.sub(r'(src="(?:app|cartera)\.js)\?v=[^" ]+', r'\1?v=9', text)

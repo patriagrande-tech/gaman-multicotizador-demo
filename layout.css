@@ -1,0 +1,11 @@
+/* Los contenidos anchos no deben ampliar la columna principal ni desplazar el menú. */
+.shell{width:100%;min-width:0}
+.shell>main{min-width:0;flex:1;margin:0 auto}
+.workspace,.side,.history,.proposal,.form-card,.summary,.ideas,.grid,.metrics{min-width:0}
+.table-wrap{width:100%;max-width:100%;overflow-x:auto}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.history-row>*{min-width:0}
+.intro-side{flex-shrink:0}
+@media(max-width:1150px){.intro-side{display:none}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.grid{grid-template-columns:minmax(0,1fr)}}
