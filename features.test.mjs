@@ -23,3 +23,9 @@ test('price depends on the risk: age, use and zone',()=>{
  assert(price({...base,localidad:'1001'})>price({...base,localidad:'5000'}));
  assert(offersFor('A','normal',{...base,anio:'2010'}).offers[0].sum<offersFor('A','normal',base).offers[0].sum);
 });
+test('no single company is cheapest in every plan',()=>{
+ const risk={marca:'Toyota',anio:'2022',uso:'Particular',localidad:'1640'};
+ const all=['A','B','C'].flatMap(c=>offersFor(c,'normal',risk).offers);
+ const winners=new Set(['rc','tc','tr'].map(id=>all.filter(o=>o.id.endsWith(id)).sort((a,b)=>a.price-b.price)[0].company));
+ assert.equal(winners.size,3);
+});

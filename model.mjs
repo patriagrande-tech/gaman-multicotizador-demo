@@ -4,6 +4,8 @@ export const plans = [
  {id:'tc', name:'Terceros completo', base:64900, theft:'Total y parcial (ejemplo)', own:'No incluidos', deductible:'Según condición de ejemplo', glass:'Con límite (ejemplo)'},
  {id:'tr', name:'Todo riesgo', base:98700, theft:'Total y parcial (ejemplo)', own:'Con franquicia (ejemplo)', deductible:'$ 350.000 ficticios', glass:'Con límite (ejemplo)'}
 ];
+// Cada compañía es más competitiva en un plan distinto, como en el mercado real.
+const appetite = {A:{rc:1, tc:1.06, tr:1.05}, B:{rc:1.07, tc:.98, tr:1.09}, C:{rc:1.12, tc:1.04, tr:.96}};
 const brandValue = {Toyota:1.15, Volkswagen:1, Renault:.9, Ford:1, Fiat:.85};
 // Tarifa ficticia pero sensible al riesgo: antigüedad, uso, zona de guarda y marca.
 export function riskFactors(risk={}, now=new Date().getFullYear()) {
@@ -19,7 +21,7 @@ export function offersFor(company, scenario, risk={}) {
  const {sum, location, value} = riskFactors(risk);
  // Zona y uso afectan a todos los planes; el valor del auto solo a los que cubren daños o robo.
  const weight = {rc:0, tc:.5, tr:1};
- return {status:'Respuesta de ejemplo recibida',offers:plans.map(p=>({...p,id:company+'-'+p.id,company,price:Math.round(p.base*location*(1-weight[p.id]+weight[p.id]*value)*(1+companies.indexOf(company)*.07)/10)*10,sum,period:'Mensual de ejemplo',validity:'Solo demostración; sin validez comercial'}))};
+ return {status:'Respuesta de ejemplo recibida',offers:plans.map(p=>({...p,id:company+'-'+p.id,company,price:Math.round(p.base*location*(1-weight[p.id]+weight[p.id]*value)*appetite[company][p.id]/10)*10,sum,period:'Mensual de ejemplo',validity:'Solo demostración; sin validez comercial'}))};
 }
 export function selection(current, id) {
  if(current.includes(id)) return current.filter(x=>x!==id);

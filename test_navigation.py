@@ -2,7 +2,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 import unittest
-from build_navigation import ROOT, PAGES, LINKS, build, nav_href
+from build_navigation import ROOT, PAGES, SHELL_PAGES, LINKS, NAV, ACTIVE, build, nav_href
 
 
 class Document(HTMLParser):
@@ -32,13 +32,22 @@ class Document(HTMLParser):
 
 
 class NavigationTests(unittest.TestCase):
-    def test_all_pages_offer_same_destinations_on_desktop_and_mobile(self):
-        for page in PAGES:
+    def test_shell_pages_offer_same_destinations_on_desktop_and_mobile(self):
+        targets = [t for t, _ in LINKS]
+        for page in SHELL_PAGES:
             doc = Document((ROOT / page).read_text(encoding='utf-8'))
+            current = ACTIVE.get(page, page)
             for menu in ('Navegación principal', 'Navegación móvil'):
                 with self.subTest(page=page, menu=menu):
-                    self.assertEqual([a['href'] for a in doc.menus[menu]], [nav_href(p) for p, _ in LINKS])
-                    self.assertEqual([a['href'] for a in doc.menus[menu] if a.get('aria-current') == 'page'], [nav_href(page)])
+                    self.assertEqual([a['href'] for a in doc.menus[menu]], [nav_href(t) for t in targets])
+                    expected = [nav_href(current)] if current in targets else []
+                    self.assertEqual([a['href'] for a in doc.menus[menu] if a.get('aria-current') == 'page'], expected)
+
+    def test_every_link_declares_profiles(self):
+        doc = Document((ROOT / 'cartera.html').read_text(encoding='utf-8'))
+        roles = [a.get('data-roles') for a in doc.menus['Navegación principal']]
+        self.assertEqual(roles, [r for t, _, r in NAV if t])
+        self.assertTrue(all(r for r in roles))
 
     def test_internal_destinations_and_anchors_exist(self):
         for page in PAGES:

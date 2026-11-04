@@ -4,11 +4,15 @@ Alcance actualizado: propuesta de plataforma para 4.000 productores, cuentas ind
 
 Sitio: https://patriagrande-tech.github.io/gaman-multicotizador-demo/
 
-La navegación de las tres pantallas se genera desde `build_navigation.py`: ejecutar `python build_navigation.py` al cambiar destinos. El HTML generado funciona sin depender de JavaScript para navegar. Validación de destinos, anclas y menú móvil: `python -m unittest test_navigation -v`.
+Diseño basado en el sitio de Grupo Gaman (Lexend Deca/Inter, grafito, azul #2563eb y navy #032b77), en un único `styles.css`. Encabezado, logo y menús de las tres pantallas se generan desde `build_navigation.py`: ejecutar `python build_navigation.py` al cambiar destinos. El HTML generado funciona sin depender de JavaScript para navegar. Validación de destinos, anclas y menú móvil: `python -m unittest test_navigation -v`.
 
 Los enlaces entre páginas llevan la misma versión de publicación y los CSS/JS usan huellas de contenido para evitar mezclar recursos viejos. Prueba de navegador del recorrido cotizador → cartera → tareas → cotizador: con Chrome y el paquete Python `playwright`, servir en puerto 8089 y ejecutar `python qa_navigation.py`. La variable opcional `GAMAN_QA_URL` permite validar la publicación. Las capturas quedan en `qa-artifacts/` (ignorado por Git).
 
-Recorrido: cargar ejemplo completo o consultar una patente ficticia (AB123CD / ABC123), completar el riesgo, elegir compañías y escenario, simular resultados, seleccionar hasta tres ofertas, comparar y preparar una propuesta imprimible/PDF. El historial permite retomar borradores y cambiar estados de seguimiento. Los datos se guardan solo en localStorage de cada navegador y pueden borrarse desde la pantalla.
+El selector de escenarios (respuestas parciales o con error) se muestra agregando `?escenarios` a la URL del cotizador.
+
+Portada (`index.html`): ingreso con usuario y contraseña deshabilitado hasta la etapa de plataforma, y elección de perfil para la demo: productor (cotizador, cartera, ficha de cliente), organizador (solo los productores de su organización) o equipo Gaman (toda la red). El perfil se guarda en el navegador y define el menú. `red.html` es el panel de red, `productor.html` y `cliente.html` las fichas. La red es ficticia y determinística (`network.mjs`): 2.140 productores, 40 PEG, 26 InHouse, 24 socios federales y 58 organizadores.
+
+Recorrido del cotizador (`cotizador.html`): cargar ejemplo completo o consultar una patente ficticia (AB123CD / ABC123), completar el riesgo, elegir compañías y escenario, simular resultados, seleccionar hasta tres ofertas, comparar y preparar una propuesta imprimible/PDF. El historial permite retomar borradores y cambiar estados de seguimiento. Los datos se guardan solo en localStorage de cada navegador y pueden borrarse desde la pantalla.
 
 Todos los precios, compañías, patentes y coberturas son ficticios. No hay consultas a proveedores, envío de propuestas, emisión, autenticación ni sincronización entre usuarios. Usar únicamente datos de ejemplo. Los ramos adicionales y las funcionalidades futuras están identificados como propuestas. Las ofertas de ejemplo no son equivalentes por el solo nombre del plan.
 
