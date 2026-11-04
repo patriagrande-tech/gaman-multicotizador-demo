@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent
 HOME = 'index.html'
 SHELL_PAGES = ('cotizador.html', 'cartera.html', 'red.html', 'productor.html', 'cliente.html', 'plataforma.html')
 PAGES = (HOME,) + SHELL_PAGES
-RELEASE = '20261105-02'
+RELEASE = '20261105-03'
 
 # Wordmark de Grupo Gaman redibujado: arco con muesca sobre "GRUPO".
 LOGO = ('<svg viewBox="0 0 206 44" role="img" aria-label="Grupo Gaman">'
