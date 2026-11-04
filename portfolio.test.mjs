@@ -17,3 +17,6 @@ test('vendored parser reads Excel and semicolon CSV with header and zero-prefixe
   assert.equal(rows[1][0],'001');assert.equal(preview(rows.slice(1),map,[])[0].errors.length,0);
  }
 });
+test('accepts unpadded and dash/dot dates, rejects ambiguous two-digit year',()=>{assert.equal(isoDate('5/1/2027'),'2027-01-05');assert.equal(isoDate('05-01-2027'),'2027-01-05');assert.equal(isoDate('5.1.2027'),'2027-01-05');assert.equal(isoDate('1/10/27'),null);});
+test('Excel date cells become ISO dates regardless of display format',async()=>{const {cellValue}=await import('./portfolio.mjs');assert.equal(cellValue(new Date(2027,0,10),'1/10/27'),'2027-01-10');assert.equal(cellValue('','x'),'x');});
+test('blank rows are skipped, not reported as errors',()=>{const result=preview([row,['','','','','',''],[' ','','','','','']],map,[]);assert.equal(result.length,1);assert.equal(result[0].errors.length,0);});

@@ -23,7 +23,7 @@
     title.textContent = route ? headings[hash] : '';
     for (const child of children) {
       let show = true;
-      if (route) show = route.some(selector => child.matches(selector)) || child.matches('.demo-banner, footer');
+      if (route) show = route.some(selector => child.matches(selector)) || child.matches('.demo-banner, footer, #message');
       else if (page === 'index.html') show = !child.matches('#history, #ideas');
       else if (page === 'cartera.html') show = !child.matches('#import, #tasks');
       child.toggleAttribute('data-route-hidden', !show);

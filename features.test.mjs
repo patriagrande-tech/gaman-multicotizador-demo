@@ -15,3 +15,11 @@ test('offers have independent identifiers across companies and stable period',()
  assert.equal(new Set(offers.map(o=>o.id)).size,9);
  assert(offers.every(o=>o.period==='Mensual de ejemplo'&&o.validity.includes('sin validez comercial')));
 });
+test('price depends on the risk: age, use and zone',()=>{
+ const price=r=>offersFor('A','normal',r).offers.find(o=>o.id==='A-tr').price;
+ const base={marca:'Toyota',anio:'2022',uso:'Particular',localidad:'1640'};
+ assert.notEqual(price(base),price({...base,anio:'2010'}));
+ assert(price({...base,uso:'Comercial'})>price(base));
+ assert(price({...base,localidad:'1001'})>price({...base,localidad:'5000'}));
+ assert(offersFor('A','normal',{...base,anio:'2010'}).offers[0].sum<offersFor('A','normal',base).offers[0].sum);
+});

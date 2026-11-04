@@ -6,7 +6,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 ROOT = Path(__file__).resolve().parent
 PAGES = ('index.html', 'cartera.html', 'plataforma.html')
-RELEASE = '20261104-11'
+RELEASE = '20261104-12'
 
 def nav_href(target):
     url = urlsplit(target)

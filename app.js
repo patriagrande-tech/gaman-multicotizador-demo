@@ -23,7 +23,7 @@ $('#find-plate').addEventListener('click',()=>{
  if(!samples[plate]){$('#plate-status').textContent='Esta demo solo reconoce AB123CD y ABC123. Podés cargar el vehículo manualmente.';return;}
  fill(samples[plate]);$('#plate-status').textContent='Vehículo ficticio cargado. Confirmá la versión y completá localidad de guarda y uso.';
 });
-document.querySelectorAll('[data-ramo]').forEach(b=>b.addEventListener('click',()=>{$('#ramo-note').textContent=b.dataset.ramo==='Automotores'?'Automotores disponible para explorar.':`${b.dataset.ramo}: propuesta para una próxima etapa. Por ahora podés explorar automotores.`;}));
+document.querySelectorAll('[data-ramo]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-ramo]').forEach(x=>x.classList.toggle('chosen',x===b));const autos=b.dataset.ramo==='Automotores';document.querySelector('.workspace').style.display=autos?'':'none';if(!autos){results.hidden=true;$('#proposal-view').hidden=true;}$('#ramo-note').textContent=b.dataset.ramo==='Automotores'?'Automotores disponible para explorar.':`${b.dataset.ramo}: propuesta para una próxima etapa. Por ahora podés explorar automotores.`;}));
 function syncButtons(){ $('#compare').disabled=chosen.length<2;$('#proposal').disabled=!chosen.length; }
 function renderOffers(){
  offers.replaceChildren();
@@ -43,13 +43,13 @@ form.addEventListener('submit',async e=>{
  e.preventDefault();if(running||!form.reportValidity())return;
  const selected=[...form.querySelectorAll('[name=company]:checked')].map(x=>x.value);
  if(!selected.length){$('#form-status').textContent='Elegí al menos una compañía.';return;}
- const scenario=data().escenario;
- running=true;const submit=form.querySelector('[type=submit]');submit.disabled=true;available=[];chosen=[];current=null;syncButtons();$('#comparison').hidden=true;$('#proposal-view').hidden=true;results.hidden=false;offers.replaceChildren();
+ const scenario=data().escenario,risk=data();
+ running=true;const submit=form.querySelector('[type=submit]');submit.disabled=true;available=[];chosen=[];current=current?.status==='Borrador'?current:null;syncButtons();$('#comparison').hidden=true;$('#proposal-view').hidden=true;results.hidden=false;offers.replaceChildren();
  $('#risk-summary').textContent=`${data().marca} ${data().modelo} ${data().version} · ${data().anio} · ${data().localidad}`;
  const statuses=el('div','company-statuses');results.insertBefore(statuses,offers);const previous=results.querySelectorAll('.company-statuses');previous.forEach(n=>{if(n!==statuses)n.remove();});
  const states=selected.map(c=>{const node=el('p','',`Compañía ${c}: consultando (simulación)…`);statuses.append(node);return node;});
  const controls=[...form.querySelectorAll('input,select,button')];controls.forEach(n=>n.disabled=true);
- for(let i=0;i<selected.length;i++) {await new Promise(r=>setTimeout(r,450));const result=offersFor(selected[i],scenario);states[i].textContent=`Compañía ${selected[i]}: ${result.status}`;available.push(...result.offers);renderOffers();}
+ for(let i=0;i<selected.length;i++) {await new Promise(r=>setTimeout(r,450));const result=offersFor(selected[i],scenario,risk);states[i].textContent=`Compañía ${selected[i]}: ${result.status}`;available.push(...result.offers);renderOffers();}
  controls.forEach(n=>n.disabled=false);
  updateRecord('Cotizada');running=false;submit.disabled=false;$('#form-status').textContent='Ejemplo terminado y guardado en el historial de este navegador.';results.scrollIntoView({behavior:'smooth',block:'start'});
 });
@@ -76,6 +76,8 @@ function renderHistory(){
 }
 $('#history-filter').addEventListener('change',renderHistory);
 $('#clear-history').addEventListener('click',()=>{if(confirm('¿Borrar el historial de demostración de este navegador?')){records=[];current=null;persist();}});
-form.querySelector('.form-bottom').prepend(action('Guardar borrador',()=>{current=null;available=[];chosen=[];updateRecord('Borrador');results.hidden=true;$('#proposal-view').hidden=true;$('#form-status').textContent='Borrador guardado en este navegador.';},'secondary'));
+form.querySelector('.form-bottom').prepend(action('Guardar borrador',()=>{const d=data();if(!d.marca&&!d.modelo&&!d.version){$('#form-status').textContent='Completá al menos marca o modelo para guardar un borrador.';return;}if(current?.status!=='Borrador')current=null;available=[];chosen=[];updateRecord('Borrador');results.hidden=true;$('#proposal-view').hidden=true;$('#form-status').textContent='Borrador guardado en este navegador.';},'secondary'));
 $('#copy-feedback').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('Propuesta Gaman: búsqueda por patente, comparación de coberturas, propuesta PDF, historial y seguimiento. Futuro: nuevos ramos, emisión, inspecciones y reportes.');$('#copy-status').textContent='Ideas copiadas.';}catch(_){$('#copy-status').textContent='Podés seleccionar y copiar el texto de esta sección.';}});
+// Validaciones del riesgo: vigencia desde hoy y hasta 60 días, año hasta el próximo modelo, CP de 4 dígitos o CPA.
+{const f=form.elements;f.fecha.min=new Date().toLocaleDateString('en-CA');const max=new Date();max.setDate(max.getDate()+60);f.fecha.max=max.toLocaleDateString('en-CA');f.anio.max=String(new Date().getFullYear()+1);f.localidad.pattern='[0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3}';f.localidad.title='Código postal de 4 dígitos (1640) o CPA (B1640ABC)';}
 renderHistory();
