@@ -2,7 +2,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 import unittest
-from build_navigation import ROOT, PAGES, LINKS, build
+from build_navigation import ROOT, PAGES, LINKS, build, nav_href
 
 
 class Document(HTMLParser):
@@ -37,8 +37,8 @@ class NavigationTests(unittest.TestCase):
             doc = Document((ROOT / page).read_text(encoding='utf-8'))
             for menu in ('Navegación principal', 'Navegación móvil'):
                 with self.subTest(page=page, menu=menu):
-                    self.assertEqual([a['href'] for a in doc.menus[menu]], [p for p, _ in LINKS])
-                    self.assertEqual([a['href'] for a in doc.menus[menu] if a.get('aria-current') == 'page'], [page])
+                    self.assertEqual([a['href'] for a in doc.menus[menu]], [nav_href(p) for p, _ in LINKS])
+                    self.assertEqual([a['href'] for a in doc.menus[menu] if a.get('aria-current') == 'page'], [nav_href(page)])
 
     def test_internal_destinations_and_anchors_exist(self):
         for page in PAGES:

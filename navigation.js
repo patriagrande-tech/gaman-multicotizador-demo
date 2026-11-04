@@ -13,7 +13,8 @@
     const hash = location.hash.slice(1);
     const current = routes[hash] ? `${page}#${hash}` : page;
     document.querySelectorAll('.nav').forEach(link => {
-      const active = link.getAttribute('href') === current;
+      const target = new URL(link.href, location.href);
+      const active = (target.pathname.split('/').pop() + target.hash) === current;
       link.classList.toggle('selected', active);
       if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
     });
