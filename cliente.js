@@ -88,7 +88,8 @@ function render(c) {
     pol.append(el('b', '', p.number), el('small', '', `${p.company} · ${p.ramo}`));
     due.append(el('span', '', dateAR(p.expires)), el('br'), dueBadge(p.expires));
     pay.append(p.payment ? el('span', `badge ${p.payment === 'Al día' ? 'ok' : p.payment === 'Pendiente' ? 'warn' : 'bad'}`, p.payment) : el('span', 'muted', 'Sin dato'));
-    for (const d of ['Póliza', ...(/Auto|Moto/.test(p.ramo) ? ['Tarjeta', 'Mercosur'] : []), 'Cupón']) {
+    // Los mismos reportes que entrega la API de emisión de Federación Patronal.
+    for (const d of ['Póliza', 'Certificado', ...(/Auto|Moto/.test(p.ramo) ? ['Tarjeta obligatoria'] : []), 'Cupón']) {
       const b = el('button', 'doc', d); b.type = 'button'; b.disabled = true; b.title = 'Se descarga desde la compañía cuando la integración esté activa';
       docs.append(b);
     }
