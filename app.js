@@ -71,7 +71,7 @@ function renderHistory(){
  if(!filtered.length)list.append(el('p','disclaimer','Todavía no hay cotizaciones con este filtro.'));
  for(const r of filtered){const card=el('div','history-row');card.append(el('b','',`${r.data.marca||'Borrador'} ${r.data.modelo||''}`),el('span','',`${r.created} · ${r.data.cliente||'Sin referencia'}`));
  const state=el('select');for(const name of ['Borrador','Cotizada','Propuesta preparada','En seguimiento','Cerrada']){const option=el('option','',name);option.selected=r.status===name;state.append(option);}state.setAttribute('aria-label','Estado de cotización');state.addEventListener('change',()=>{r.status=state.value;persist();});
- card.append(state,action('Retomar',()=>{current=r;fill(r.data);available=r.offers;chosen=(r.selected||[]).filter(id=>available.some(o=>o.id===id));renderOffers();results.hidden=!available.length;$('#comparison').hidden=true;$('#proposal-view').hidden=true;$('#inicio').scrollIntoView({behavior:'smooth'});}));list.append(card);
+ card.append(state,action('Retomar',()=>{location.hash='';current=r;fill(r.data);available=r.offers;chosen=(r.selected||[]).filter(id=>available.some(o=>o.id===id));renderOffers();results.hidden=!available.length;$('#comparison').hidden=true;$('#proposal-view').hidden=true;$('#inicio').scrollIntoView({behavior:'smooth'});}));list.append(card);
  }
 }
 $('#history-filter').addEventListener('change',renderHistory);

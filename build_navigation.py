@@ -7,10 +7,10 @@ PAGES = ('index.html', 'cartera.html', 'plataforma.html')
 LINKS = (
     ('index.html', 'Cotizador'),
     ('cartera.html', 'Administrador de cartera'),
+    ('plataforma.html', 'Proyecto integral'),
     ('index.html#history', 'Historial de cotizaciones'),
     ('cartera.html#import', 'Importar planillas'),
     ('cartera.html#tasks', 'Tareas y vencimientos'),
-    ('plataforma.html', 'Proyecto integral'),
     ('index.html#ideas', 'Próximas funcionalidades'),
 )
 
@@ -19,7 +19,7 @@ def links(page):
     return ''.join(
         f'<a class="nav{" selected" if target == page else ""}" href="{target}"'
         + (' aria-current="page"' if target == page else '')
-        + f'>{label}</a>' for target, label in LINKS
+        + f'>{label}</a>' + ('<p class="aside-label nav-group">GESTIONES Y SEGUIMIENTO</p>' if target == 'plataforma.html' else '') for target, label in LINKS
     )
 
 
@@ -34,9 +34,12 @@ def build():
         text = re.sub(r'<nav class="mobile-navigation".*?</nav>', '', text, flags=re.S)
         text = text.replace('</header>', f'</header><nav class="mobile-navigation" aria-label="Navegación móvil">{links(page)}</nav>', 1)
         text = re.sub(r'<link rel="stylesheet" href="navigation.css[^" ]*">', '', text)
-        text = text.replace('</head>', '<link rel="stylesheet" href="navigation.css?v=8"></head>', 1)
+        text = text.replace('</head>', '<link rel="stylesheet" href="navigation.css?v=9"></head>', 1)
+        text = re.sub(r'<script src="navigation.js[^" ]*" defer></script>', '', text)
+        text = text.replace('</head>', '<script src="navigation.js?v=9" defer></script></head>', 1)
         # Misma versión de los estilos compartidos en todas las pantallas.
         text = re.sub(r'(href="(?:styles|features)\.css)\?v=[^" ]+', r'\1?v=8', text)
+        text = re.sub(r'(src="(?:app|cartera)\.js)\?v=[^" ]+', r'\1?v=9', text)
         p.write_text(text, encoding='utf-8', newline='\n')
 
 
