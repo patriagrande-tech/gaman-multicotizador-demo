@@ -1,0 +1,21 @@
+{
+  "name": "Portal de productores Gaman",
+  "short_name": "Gaman",
+  "description": "Cotizá, seguí tu cartera y tu red desde el celular. Propuesta conceptual con datos ficticios.",
+  "lang": "es-AR",
+  "start_url": "index.html?origen=app",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f8",
+  "theme_color": "#161616",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Cotización rápida", "url": "rapida.html?perfil=productor", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Cotizador", "url": "cotizador.html?perfil=productor", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Mi cartera", "url": "cartera.html?perfil=productor", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]}
+  ]
+}

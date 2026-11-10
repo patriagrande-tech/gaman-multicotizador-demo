@@ -6,9 +6,9 @@ from urllib.parse import urlsplit, urlunsplit
 
 ROOT = Path(__file__).resolve().parent
 HOME = 'index.html'
-SHELL_PAGES = ('cotizador.html', 'cartera.html', 'red.html', 'productor.html', 'cliente.html', 'plataforma.html')
+SHELL_PAGES = ('cotizador.html', 'rapida.html', 'cartera.html', 'red.html', 'productor.html', 'cliente.html', 'plataforma.html')
 PAGES = (HOME,) + SHELL_PAGES
-RELEASE = '20261105-03'
+RELEASE = '20261110-01'
 
 # Wordmark de Grupo Gaman redibujado: arco con muesca sobre "GRUPO".
 LOGO = ('<svg viewBox="0 0 206 44" role="img" aria-label="Grupo Gaman">'
@@ -19,6 +19,7 @@ LOGO = ('<svg viewBox="0 0 206 44" role="img" aria-label="Grupo Gaman">'
 
 ICONS = {
     'cotizador.html': '<path d="M5 3h14v18H5z"/><path d="M8 7h8M8 11h2M12 11h2M16 11v6M8 15h2M12 15h2M8 19h2M12 19h2"/>',
+    'rapida.html': '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
     'cartera.html': '<path d="M3 7h18v13H3z"/><path d="M8 7V4h8v3M3 12h18"/>',
     'cotizador.html#history': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     'cartera.html#import': '<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v6h16v-6"/>',
@@ -34,6 +35,7 @@ ICONS = {
 NAV = (
     (None, 'Mi oficina', 'productor'),
     ('cotizador.html', 'Cotizador', 'productor'),
+    ('rapida.html', 'Cotización rápida', 'productor'),
     ('cartera.html', 'Mi cartera', 'productor'),
     ('cotizador.html#history', 'Historial de cotizaciones', 'productor'),
     ('cartera.html#import', 'Importar planillas', 'productor'),
@@ -92,9 +94,10 @@ def build():
             text = text.replace('</header>', f'</header><nav class="mobile-navigation" aria-label="Navegación móvil">{links(page)}</nav>', 1)
         text = re.sub(r'<div class="logo-slot">.*?</div>', '<div class="logo-slot">' + LOGO + '</div>', text, flags=re.S)
         # Un único stylesheet y el script de navegación en todas las pantallas.
-        text = re.sub(r'<link rel="stylesheet" href="[^"]+">', '', text)
+        text = re.sub(r'<link rel="(stylesheet|manifest|apple-touch-icon)" href="[^"]+">', '', text)
         text = re.sub(r'<script src="navigation\.js[^"]*" defer></script>', '', text)
-        text = text.replace('</head>', '<link rel="stylesheet" href="styles.css"><script src="navigation.js" defer></script></head>', 1)
+        text = text.replace('</head>', '<link rel="stylesheet" href="styles.css"><link rel="manifest" href="manifest.webmanifest">'
+                            '<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><script src="navigation.js" defer></script></head>', 1)
 
         # Evitar recuperar otra página de una publicación anterior al navegar.
         def version_page(match):

@@ -25,6 +25,17 @@
   const brand = document.querySelector('header .brand');
   if (brand) { const url = new URL(brand.href, location.href); url.pathname = url.pathname.replace(/[^/]*$/, profile.home); brand.href = url.href; }
 
+  // Instalable como aplicación (PWA). El botón #install aparece solo si el navegador lo ofrece.
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  window.addEventListener('beforeinstallprompt', e => {
+    const button = document.getElementById('install');
+    if (!button) return;
+    e.preventDefault();
+    button.hidden = false;
+    button.onclick = () => { e.prompt(); e.userChoice.finally(() => { button.hidden = true; }); };
+  });
+  if (matchMedia('(display-mode: standalone)').matches) document.documentElement.dataset.app = 'installed';
+
   const ROUTES = {
     'cotizador.html': {history: 'Historial de cotizaciones', ideas: 'Próximas funcionalidades'},
     'cartera.html': {import: 'Importar planillas', tasks: 'Tareas y vencimientos'},

@@ -431,18 +431,19 @@ function renderHistory() {
     for (const name of STATES) { const option = el('option', '', name); option.selected = r.status === name; state.append(option); }
     state.setAttribute('aria-label', 'Estado de cotización');
     state.addEventListener('change', () => { r.status = state.value; persist(); });
-    row.append(info, el('span', `badge ${STATE_TONE[r.status] || 'neutral'}`, r.status), state, action('Retomar', () => {
-      location.hash = '';
-      current = r; fill(r.data, {zero: r.data.patente === '0 km'}); available = r.offers; companyStates = {};
-      chosen = (r.selected || []).filter(id => available.some(o => o.id === id));
-      results.querySelectorAll('.company-statuses').forEach(n => n.remove());
-      quotedKey = riskKey();
-      renderOffers(); results.hidden = !available.length; $('#stale').hidden = true;
-      $('#comparison').hidden = true; $('#proposal-view').hidden = true;
-      $('#inicio').scrollIntoView({behavior: 'smooth'});
-    }, 'secondary'));
+    row.append(info, el('span', `badge ${STATE_TONE[r.status] || 'neutral'}`, r.status), state, action('Retomar', () => resume(r), 'secondary'));
     list.append(row);
   }
+}
+function resume(r) {
+  location.hash = '';
+  current = r; fill(r.data, {zero: r.data.patente === '0 km'}); available = r.offers; companyStates = {};
+  chosen = (r.selected || []).filter(id => available.some(o => o.id === id));
+  results.querySelectorAll('.company-statuses').forEach(n => n.remove());
+  quotedKey = riskKey();
+  renderOffers(); results.hidden = !available.length; $('#stale').hidden = true;
+  $('#comparison').hidden = true; $('#proposal-view').hidden = true;
+  (available.length ? results : $('#inicio')).scrollIntoView({behavior: 'smooth'});
 }
 $('#history-filter').addEventListener('change', renderHistory);
 $('#clear-history').addEventListener('click', () => { if (confirm('¿Borrar el historial de demostración de este navegador?')) { records = []; current = null; persist(); } });
@@ -485,4 +486,7 @@ else { syncDate(); cpCheck(); refresh(); }
 // Desde la ficha de cliente: cotizar para ese cliente.
 if (params.get('cliente')) { F.cliente.value = params.get('cliente'); refresh(); }
 renderHistory();
-if (!location.hash && !$('#zero-km').checked) plate.focus({preventScroll: true});
+// Desde la cotización rápida: abrir esa cotización con la comparación completa.
+const resumed = records.find(r => r.id === params.get('retomar'));
+if (resumed) resume(resumed);
+else if (!location.hash && !$('#zero-km').checked) plate.focus({preventScroll: true});

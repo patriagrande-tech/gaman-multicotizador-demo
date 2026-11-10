@@ -21,7 +21,7 @@ with sync_playwright() as p:
         page.get_by_role('link', name='Productor asesor').click()
         page.wait_for_load_state('networkidle')
         nav = page.get_by_role('navigation', name='Navegación principal', exact=True)
-        assert nav.get_by_role('link').count() == 7, nav.inner_text()
+        assert nav.get_by_role('link').count() == 8, nav.inner_text()
         assert not nav.get_by_role('link', name='Panel de red').is_visible()
         nav.get_by_role('link', name='Mi cartera', exact=True).click()
         page.wait_for_load_state('networkidle')
